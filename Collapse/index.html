@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>collapse 手风琴效果</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>手风琴效果</h2>
+        <div class="item active">
+            <div class="header">一致性 Consistency</div>
+            <div class="content">
+                与现实生活一致，与现实生活的流程，逻辑保持一致，遵循用户习惯的语言和观念;<br>
+                在界面中一致。君不见黄河之水天上来，奔流到海不复回。
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="header">反馈 Feedback</div>
+            <div class="content">
+                青春由磨砺而出彩，人生因奋斗而升华；致敬青春
+            </div>
+        </div>
+        <div class="item">
+            <div class="header">效率 Efficiency</div>
+            <div class="content">
+                采菊东篱下，悠然见南山
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>手风琴效果</h2>
+        <div class="item active">
+            <div class="header">一致性 Consistency</div>
+            <div class="content">
+                与现实生活一致，与现实生活的流程，逻辑保持一致，遵循用户习惯的语言和观念;<br>
+                在界面中一致。君不见黄河之水天上来，奔流到海不复回。
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="header">反馈 Feedback</div>
+            <div class="content">
+                青春由磨砺而出彩，人生因奋斗而升华；致敬青春
+            </div>
+        </div>
+        <div class="item">
+            <div class="header">效率 Efficiency</div>
+            <div class="content">
+                采菊东篱下，悠然见南山
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script>
+    class Collapse {
+        constructor(container, type = 2) {
+            this.container = container;
+            this.items = document.querySelectorAll('.item');
+            this.type = type;
+            this.init();
+            this.bind();
+        }
+        init() {
+
+        }
+        bind() {
+            //暂存this
+            var self = this;
+            this.items.forEach(item => {
+                item.onclick = function () {
+                    if (self.type === 1) {
+                        this.classList.toggle('active')
+                    } else {
+                        self.items.forEach(item => {
+                            item.classList.remove('active');
+                            this.classList.add('active')
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    new Collapse(document.querySelectorAll('.item')[0])
+    new Collapse(document.querySelectorAll('.item')[1],2)
+
+    // document.querySelectorAll('xxx').forEach(item=>new Class(item))
+</script>
+
+</html>

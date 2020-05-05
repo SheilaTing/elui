@@ -1,0 +1,56 @@
+.container {
+    width:800px;
+    margin:50px auto;
+    border:1px solid #ccc;
+    border-radius:5px;
+    padding:20px;
+}
+.item{
+    border-top:1px solid #ccc;
+    margin-bottom:10px;
+    cursor: pointer;
+
+}
+.item:last-child{
+    border-top:1px solid #ccc;
+}
+.item .header{
+    margin:20px;
+}
+.item .content{
+    margin-left:20px;
+    height:0;
+    overflow: hidden;
+}
+.item.active .content{
+    /* 神奇 */
+    height:auto;
+}
+
+/* 三角 这个更方便*/
+.item .header::after{
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid #303030;
+    border-right: 1px solid #303030;
+    margin-left: auto;
+    transform: rotate(45deg);
+    transition: all .3s;
+}
+/* 箭头写法 */
+/* .item .header::after{
+    display:block;
+    content:'';
+    width:0px;
+    border:5px solid transparent;
+    border-top:5px solid black;
+    margin-left:auto;
+} */
+
+/* 选中状态箭头旋转 */
+.item.active .header::after {
+    transform: rotate(135deg);
+  }
+
