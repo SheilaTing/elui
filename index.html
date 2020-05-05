@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab选项卡</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Tab 选项卡</h2>
+        <div class="tabs">
+            <div class="tab-header">
+                <span class="tab-item active">用户管理</span>
+                <span class="tab-item">配置管理</span>
+                <span class="tab-item">角色管理</span>
+                <span class="tab-item">定时任务补偿</span>
+                <span class="line"></span>
+            </div>
+
+            <div class="tab-content">
+                <div class="tab-panel active">用户管理</div>
+                <div class="tab-panel">配置管理</div>
+                <div class="tab-panel">角色管理</div>
+                <div class="tab-panel">定时任务补偿</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Tab 选项卡</h2>
+        <div class="tabs">
+            <div class="tab-header">
+                <span class="tab-item active">用户管理</span>
+                <span class="tab-item">配置管理</span>
+                <span class="tab-item">角色管理</span>
+                <span class="tab-item">定时任务补偿</span>
+                <span class="line"></span>
+            </div>
+
+            <div class="tab-content">
+                <div class="tab-panel active">用户管理</div>
+                <div class="tab-panel">配置管理</div>
+                <div class="tab-panel">角色管理</div>
+                <div class="tab-panel">定时任务补偿</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    //封装成对象
+    class Tabs {
+        constructor(container) {
+            this.container = container;
+            this.tabs = this.container.querySelectorAll('.tab-item');
+            this.panels = this.container.querySelectorAll('.tab-panel');
+            this.line = this.container.querySelector('.tabs .line');
+            this.init();
+            this.bind();
+        }
+        init() {
+            this.line.style.width = this.tabs[0].offsetWidth + 'px'
+        }
+        bind() {
+            var self = this;
+            this.tabs.forEach(tab => {
+                tab.onclick = function () {
+                    self.tabs.forEach(tab => {
+                        tab.classList.remove('active');
+                    })
+                    this.classList.add('active');
+                    console.log(this.offsetWidth)
+                    console.log(this.offsetLeft)
+                    self.line.style.width = this.offsetWidth + 'px';
+                    self.line.style.transform = `translateX(${this.offsetLeft}px)`
+                    var index = [...self.tabs].indexOf(this);
+                    self.panels.forEach(panel => {
+                        panel.classList.remove('active');
+                    })
+                    self.panels[index].classList.add('active');
+                }
+            })
+        }
+
+
+    }
+
+    document.querySelectorAll('.tabs').forEach($container => new Tabs($container))
+
+
+
+
+
+
+    // var $ = argument => document.querySelector(argument);
+    // var $$ = argument => document.querySelectorAll(argument);
+    // var tabs = $$('.tab-item');
+    // var panels = $$('.tab-panel');
+    // var line = $('.tabs .line');
+    // line.style.width = tabs[0].offsetWidth + 'px'
+
+    // tabs.forEach(tab => {
+    //     tab.onclick = function () {
+    //         tabs.forEach(tab => {
+    //             tab.classList.remove('active');
+    //         })
+    //         this.classList.add('active');
+    //         console.log(this.offsetWidth)
+    //         console.log(this.offsetLeft)
+    //         line.style.width = this.offsetWidth + 'px';
+    //         line.style.transform = `translateX(${this.offsetLeft}px)`
+    //         var index = [...tabs].indexOf(this);
+    //         panels.forEach(panel => {
+    //             panel.classList.remove('active');
+    //         })
+    //         panels[index].classList.add('active');
+    //     }
+    // })
+</script>
+
+</html>
