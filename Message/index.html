@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二写 Message 消息框</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1591966_u346be35l6.css">
+</head>
+<style>
+    .container {
+        width: 800px;
+        margin: 50px auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 30px;
+    }
+
+    .button {
+        padding: 7px 15px;
+        margin-right: 7px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        color: blue;
+        border-color: lightblue;
+    }
+
+    .message {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 7px;
+        background-color: #67C23A;
+        color: white;
+        /* 默认在上方 看不到，加上show样式时，动画效果展示 */
+        transform: translate(-50%, -50px);
+        transition: all .3s;
+    }
+
+    .message.show {
+        transform: translate(-50%, 10px);
+    }
+    .message.success{
+        background-color: #67C23A;
+    }
+    .message.warning {
+    background-color: #E6A23C;
+  }
+
+  .message.info {
+    background-color: #909399;
+  }
+
+  .message.danger {
+    background-color: #F56C6C;
+  }
+</style>
+
+<body>
+    <div class="container">
+        <h2>Message 消息框</h2>
+        <button id="btn-success" class="button">成功</button>
+        <button id='btn-warning' class="button">警告</button>
+        <button id='btn-info' class="button">消息</button>
+        <button id='btn-danger' class="button">错误</button>
+    </div>
+</body>
+<script>
+    class Message {
+        constructor(options) {
+            //因为要用到传递来的文字和类型，先暂存
+            this.type = options.type;
+            this.text = options.text;
+            //创建点击时要展示的消息框
+            this.render();
+            //控制显示隐藏
+            this.bind();
+        }
+        render() {
+            var div = document.createElement('div');
+            div.innerText = this.text;
+            //现在发现样式太丑，加个class 写下样式 默认是隐藏的，加上show后出现
+            div.classList.add('message');
+            //控制弹框的背景色
+            div.classList.add(this.type);
+            //后面要删除这个message ,先暂存
+            this.message = div;
+            //给message加图标样式
+            div.classList.add('iconfont');
+            div.classList.add('icon-'+this.type)
+            document.body.appendChild(div);
+        }
+        show() {
+            //给message加上show动画
+            this.message.classList.add('show');
+        }
+        destroy() {
+            //先移除样式
+            this.message.classList.remove('show');
+            //等动画执行完后删除
+            setTimeout(() => {
+                this.message.parentNode.removeChild(this.message);
+            }, 3000);
+        }
+        bind() {
+            //此时发现出现时没有动画，因为js把message的创建和显示一并执行了，加个延时
+            setTimeout(() => {
+                this.show();
+            }, 0);
+           
+            //三秒后隐藏   发现隐藏时候也没动画，因为，显示3s后立马把他删除了，动画没来得及执行，去destroy给删除元素加延时
+            setTimeout(() => {
+                this.destroy();
+            }, 3000);
+        }
+    }
+
+    //给dom中对应的按钮加上点击事件，点击事件中渲染这个动态的消息框
+    //注意传递参数时候，你可以传递多个参数分开（参数多了，不知道它每个顺序代表哪个参数），
+    //但最好是传递一个对象过去，这样用的时候直接.就可以取出
+    document.querySelector('#btn-success').onclick = function () {
+        new Message({ type: 'success', text: ' 成功' })
+    }
+    document.querySelector('#btn-info').onclick = function() {
+      new Message({text: ' 我是通知', type: 'info'})
+    }
+    document.querySelector('#btn-danger').onclick = function() {
+      new Message({text: ' 危险', type: 'danger'})
+    }
+    document.querySelector('#btn-warning').onclick = function() {
+      new Message({text: ' 我是警告', type: 'warning'})
+    }
+
+</script>
+
+</html>

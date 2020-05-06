@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message消息框</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1591966_u346be35l6.css">
+</head>
+<style>
+    .container{
+        width:800px;
+        margin:50px auto;
+        border:2px solid #ccc;
+        border-radius:5px;
+        padding:30px;
+    }
+    .container .button{
+        padding:8px 12px;
+        margin-right:5px;
+        border:1px solid #ccc;
+        border-radius:5px;
+        cursor: pointer;
+        outline: none;
+    }
+    .button:hover{
+        color:blue;
+        border-color: blue;
+    }
+    .message{
+        position:fixed;
+        top:2%;
+        left:50%;
+        border:1px solid;
+        border-radius:5px;  
+        padding:5px 10px;
+        background:#67C23A;
+        color:white;
+        transition:all .3s;
+        transform: translate(-50%,-50px);
+        opacity: 0;
+    }
+    .message.show{
+        transform:translate(-50%,0px);
+        opacity: 1;
+    }
+    .message.first{
+        background:#67C23A;
+    }
+
+    .message.second{
+        background-color: #E6A23C;
+    }
+    .message.third{
+        background-color: #909399;
+    }
+    .message.normal{
+        background-color: #F56C6C;
+    }
+</style>
+<body>
+    <div class="container">
+        <h2>Message 消息框</h2>
+        <button id="id-first" class="button">状元</button>
+        <button id='id-second' class="button">榜眼</button>
+        <button id='id-third' class="button">探花</button>
+        <button id='id-normal' class="button">落榜</button>
+    </div>
+</body>
+
+<script>
+    class Message{
+        //两个参数一个弹框类型，即不同的样式，一个是弹框的文字，不同弹框的不同文字
+        constructor({type='first',text='第一名'}){
+            // //弹框类型
+            // this.type = options.type || 'first';
+            // //弹框信息
+            // this.text = options.text || '第一名';
+            this.type = type;
+            this.text = text;
+            //创建要展示的消息框
+            this.render();
+            //设置消息框消失时间以及控制显示和隐藏以及样式
+            this.bind();
+        }
+        render(){
+           var div = document.createElement('div');
+           div.innerText = this.text;
+           //将创建的这个message暂存，后面通过样式控制显示
+           this.message = div;
+           //给div加class方便控制样式
+           div.classList.add('message')
+           div.classList.add(this.type)
+           //图标
+           let icon =document.createElement('sapn');
+           icon.classList.add('iconfont');
+           icon.classList.add('icon-success');
+           div.appendChild(icon)
+           document.body.append(div);
+        }
+        bind(){
+            //先展示，通过控制样式先让它展示，然后3秒后隐藏
+             //此时发现，弹框马上就出现了，没有延时渐出的效果，因为，我们的创建和展示被js同步执行了，
+            //我们可以把显示方法使用setTimeOut 放到队列中，延时执行
+            setTimeout(() => {
+                this.show();
+            }, 0);
+            //我们每点击一次就会创建一个弹框dom，如果只让他隐藏，dom会越来越多，所以这里考虑移除dom
+            setTimeout(() => {
+                // this.hide();
+                // this.destroy();
+            }, 3000);
+        }
+        show(){
+            this.message.classList.add('show');
+        }
+        // hide(){
+        //     this.message.classList.remove('show');
+        // }
+        destroy(){
+            this.message.classList.remove('show');
+            //此时发现元素立马被删除根本来不及执行 .show 上的动画，所以考虑给删除加个延时,此时要加时间等待动画执行完
+            setTimeout(() => {
+                this.message.parentNode.removeChild(this.message);
+            }, 3000);     
+        }
+    }
+
+    document.querySelector('#id-first').onclick=function(){
+        new Message({type:'first',text:'我是状元'})
+    }
+    document.querySelector('#id-second').onclick=function(){
+        new Message({type:'second',text:'我是榜眼'})
+    }
+    document.querySelector('#id-third').onclick=function(){
+        new Message({type:'third',text:'我是探花'})
+    }
+    document.querySelector('#id-normal').onclick=function(){
+        new Message({type:'norml',text:'我是平民'})
+    }
+</script>
+</html>
