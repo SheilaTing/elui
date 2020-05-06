@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolTip组件</title>
+</head>
+<style>
+    .container {
+        width: 800px;
+        margin: 50px auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 30px;
+    }
+
+    .tool-tip {
+        position: relative;
+        padding: 8px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .tool-tip:hover {
+        border-color: lightskyblue;
+        color: lightskyblue
+    }
+
+    .tooltip {
+        position: absolute;
+        z-index: 10;
+        background: #000;
+        color: #fff;
+        display: none;
+        white-space: nowrap;
+        padding: 3px 6px;
+        border-radius: 4px;
+    }
+
+    .tooltip.show {
+        display: block;
+        ;
+    }
+
+    .tooltip.top {
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* 将箭头公用的语句抽离出来 before 和 after 都可以 */
+    .tooltip::before {
+        content: '';
+        width: 0;
+        height: 0;
+        position: absolute;
+        border: 6px solid transparent;
+
+    }
+
+    .tooltip.top::before {
+        border-top-color: #303030;
+        /* 偏离自己大小的50%，因为定位一般是根据左上角为顶点的 */
+        transform: translateX(-50%);
+        top: 100%;
+        left: 50%;
+    }
+
+    .tooltip.bottom {
+        top: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .tooltip.bottom::before {
+        border-bottom-color: #303030;
+        transform: translateX(-50%);
+        bottom: 100%;
+        left: 50%;
+    }
+
+    .tooltip.left {
+        right: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .tooltip.left::before {
+        border-left-color: #303030;
+        transform: translateY(-50%);
+        top: 50%;
+        right: -11px;
+    }
+
+    .tooltip.right {
+        left: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .tooltip.right::before {
+        border-right-color: #303030;
+        transform: translateY(-50%);
+        top: 50%;
+        left: -11px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h2>ToopTip组件</h2>
+        <button class="tool-tip" data-align='top' data-text='内容在上方'>上</button>
+        <button class="tool-tip" data-align='bottom' data-text='内容在下方'>下</button>
+        <button class="tool-tip" data-align='left' data-text='内容在左方'>左</button>
+        <button class="tool-tip" data-align='right' data-text='内容在右方'>右</button>
+    </div>
+</body>
+
+<script>
+    class ToolTip {
+        constructor(root) {
+            //传递来的tool
+            this.root = root;
+            //将this 也就是tip 赋值给root.tootip属性，这样就能判断了
+            this.root.toolTip = this;
+            //获取他身上携带的信息 使用 对象.dataset. 也可以使用 getAttribute()
+            this.align = root.dataset.align;
+            this.text = root.dataset.text;
+
+
+            //绑定 this
+            this.setRoot();
+            //创建tip
+            this.render();
+            //控制弹框的显示
+            this.show();
+
+        }
+        render() {
+            let toolTip = document.createElement('div');
+            toolTip.innerHTML = this.text;
+            //加上方向的class
+            toolTip.classList.add(this.align);
+            //加个样式控制基本样式
+            toolTip.classList.add('tooltip');
+            //将tooltip 赋值给this.toolTip;
+            this.toolTip = toolTip;
+            //添加到页面上,考虑到把他放到父元素内，这样后面好做定位
+            this.root.appendChild(toolTip);
+
+        }
+        setRoot() {
+            //鼠标离开时调用hideTooltip就是调用tip对象的hide()方法，绑定对象的this;
+            this.root.hideTooltip = this.hide.bind(this)
+            this.root.showToolTip = this.show.bind(this);
+        }
+        show() {
+            this.toolTip.classList.add('show');
+        }
+        hide() {
+            this.toolTip.classList.remove('show');
+        }
+    }
+
+    //获取所有的tool,遍历每一个，当鼠标移上去执行操作（上个案例 message也可以把要传递的信息写进dom里面）
+    document.querySelectorAll('.tool-tip').forEach(node => {
+        node.onmouseenter = function () {
+            //鼠标移上来后，要展示相应的tips，这里先判断是否有，有了直接展示，没有创建 
+            if (node.toolTip) {
+                //调用展示的方法，其实就是加 show,只创建一次，创建后赋给对象，然后每次先判断
+                node.showToolTip();
+            } else {
+                //否则创建一个tip,把当前点的这个tool对象传递过去，要用到里面的信息
+                new ToolTip(this);
+            }
+        }
+        node.onmouseleave = function () {
+            node.hideTooltip();
+        }
+    })
+</script>
+
+</html>
